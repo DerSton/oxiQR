@@ -15,6 +15,7 @@ jobs:
 
     env:
       CARGO_TERM_COLOR: always
+      BINARY_NAME: oxiqr
 
     steps:
       - name: Checkout
@@ -32,11 +33,11 @@ jobs:
       - name: Prepare dist folder
         run: |
           mkdir -p dist
-          cp target/release/oxiqr dist/oxiqr-linux-amd64
+          cp target/release/${BINARY_NAME} dist/${BINARY_NAME}-linux-amd64
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*
+          files: dist/${{ env.BINARY_NAME }}-linux-amd64
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-beta') }}
