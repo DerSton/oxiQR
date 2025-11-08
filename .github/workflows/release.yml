@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "v*.*.*-beta*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      CARGO_TERM_COLOR: always
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run tests
+        run: cargo test --all --locked
+
+      - name: Build release binary
+        run: cargo build --release --locked
+
+      - name: Prepare dist folder
+        run: |
+          mkdir -p dist
+          cp target/release/oxiqr dist/oxiqr-linux-amd64
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-beta') }}
