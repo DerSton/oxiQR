@@ -13,7 +13,7 @@ env:
 
 jobs:
   checks:
-    uses: ./.github/workflows/rust-checks.yml
+    uses: ./.github/workflows/rust-checks.yaml
 
   nightly:
     needs: checks
@@ -32,7 +32,7 @@ jobs:
       - name: Prepare dist folder
         run: |
           mkdir -p dist
-          cp target/release/$BINARY_NAME dist/${BINARY_NAME}-linux-amd64
+          cp target/release/$BINARY_NAME dist/${BINARY_NAME}-${{ runner.os }}-${{ runner.arch }}
 
       - name: Create / update nightly prerelease
         uses: softprops/action-gh-release@v2

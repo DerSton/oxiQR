@@ -8,4 +8,4 @@ on:
 
 jobs:
   rust-checks:
-    uses: ./.github/workflows/rust-checks.yml
+    uses: ./.github/workflows/rust-checks.yaml

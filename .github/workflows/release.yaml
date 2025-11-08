@@ -15,7 +15,7 @@ env:
 
 jobs:
   checks:
-    uses: ./.github/workflows/rust-checks.yml
+    uses: ./.github/workflows/rust-checks.yaml
 
   release:
     needs: checks
@@ -34,11 +34,11 @@ jobs:
       - name: Prepare dist folder
         run: |
           mkdir -p dist
-          cp target/release/$BINARY_NAME dist/${BINARY_NAME}-linux-amd64
+          cp target/release/$BINARY_NAME dist/${BINARY_NAME}-${{ runner.os }}-${{ runner.arch }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/${{ env.BINARY_NAME }}-linux-amd64
+          files: dist/${{ env.BINARY_NAME }}-${{ runner.os }}-${{ runner.arch }}
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-beta') }}
