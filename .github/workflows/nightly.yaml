@@ -7,13 +7,17 @@ on:
 permissions:
   contents: write
 
-jobs:
-  nightly:
-    runs-on: ubuntu-latest
+env:
+  CARGO_TERM_COLOR: always
+  BINARY_NAME: oxiqr
 
-    env:
-      CARGO_TERM_COLOR: always
-      BINARY_NAME: oxiqr
+jobs:
+  checks:
+    uses: ./.github/workflows/rust-checks.yml
+
+  nightly:
+    needs: checks
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -22,16 +26,13 @@ jobs:
       - name: Install Rust (stable)
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Run tests
-        run: cargo test --all --locked
-
       - name: Build release binary
         run: cargo build --release --locked
 
       - name: Prepare dist folder
         run: |
           mkdir -p dist
-          cp target/release/${{ env.BINARY_NAME }} dist/${{ env.BINARY_NAME }}-linux-amd64
+          cp target/release/$BINARY_NAME dist/${BINARY_NAME}-linux-amd64
 
       - name: Create / update nightly prerelease
         uses: softprops/action-gh-release@v2
