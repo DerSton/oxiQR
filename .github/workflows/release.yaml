@@ -39,6 +39,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/${{ env.BINARY_NAME }}-${{ runner.os }}-${{ runner.arch }}
+          files: dist/*
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-beta') }}
+          make_latest: ${{ !contains(github.ref_name, '-beta') }}
