@@ -48,4 +48,3 @@ jobs:
           prerelease: true
           files: dist/*
           make_latest: false
-          overwrite: true
